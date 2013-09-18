@@ -1,0 +1,147 @@
+!!! 5
+html
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+    title Toolbox for optimizing rails project
+
+    //- Check out 'src/bower_components/prism/' for available themes
+    link(rel='stylesheet', type='text/css', href='bower_components/prism/prism-tomorrow.css')
+
+    link(rel='stylesheet', type='text/css', href='styles/main.css')
+
+  body
+
+    article
+
+      section(data-bespoke-hash='home')
+        h1 Toolbox for optimizing Rails project
+        h3 RainChen @ Beansmile
+        h4 2013-09-14
+
+      section(data-bespoke-hash='kind-of-tools')
+        h2 Kind of Tools
+        h3.bullet <a href="https://www.ruby-toolbox.com/">https://www.ruby-toolbox.com</a> is the hardware store.
+        ul
+          li
+            h4 Profiling
+            p Find out the bottleneck in your code.
+          li
+            h4 Indexing
+            p The most easy way to speed up sql queries.
+          li
+            h4 Caching
+            p Cache everything you can.
+          li
+            h4 Benchmarking
+            p Does your website ready for publish?
+
+      section(data-bespoke-hash='profiling-tools')
+        h2 Profiling Tools
+        h3.bullet 
+        ul
+          li
+            h4 <a href="https://github.com/newrelic/rpm">newrelic_rpm</a>
+            p
+              <a href="http://newrelic.com/ruby">New Relic</a> provides you with deep information about the performance of your web application as it runs in production.
+            p Developer Mode: <a href="http://loalhost:3000/newrelic">http://loalhost:3000/newrelic</a>
+          li
+            h4 <a href="https://github.com/SamSaffron/MiniProfiler/tree/master/Ruby">rack-mini-profiler</a>
+            p Profiling toolkit for Rack applications with Rails integration. Client Side profiling, DB profiling and Server profiling. <a href="http://railscasts.com/episodes/368-miniprofiler?view=asciicast">Rails casts</a>
+          li
+            h4 <a href="https://github.com/flyerhzm/bullet">bullet</a>
+            p help to kill N+1 queries and unused eager loading.
+
+      section(data-bespoke-hash='indexing')
+        h2 Indexing
+        h3.bullet <a href="https://github.com/plentz/lol_dba">lol_dba</a>
+        p a small package of rake tasks that scan your application models and displays a list of columns that probably should be indexed. Also, it can generate .sql migration scripts.
+        hr
+        code.language-css
+          pre.
+            gem install lol_dba
+
+      section(data-bespoke-hash='indexing-lol_dba-example')
+        h2 Indexing
+        h3.bullet rake db:find_indexes
+        hr
+        code.language-css
+          pre.
+            # migration for adding all necessary indexes based on associations
+            # supplied by gem lol_dba via running `rake db:find_indexes`
+            class AddMissingIndexesOn20130817 < ActiveRecord::Migration
+              def change
+                add_index :events, [:id, :type]
+                add_index :events, :businesspartner_id
+                add_index :addresses, [:id, :type]
+                add_index :people, [:id, :type]
+                add_index :activities, :report_id
+                add_index :activities, :event_id
+              end
+            end
+
+      section(data-bespoke-hash='caching')
+        h2 Caching Tools
+        h3.bullet cache view rending, cache model queries
+        ul
+          li
+            h4 <a href="https://github.com/rails/cache_digests">cache_digests</a>
+            p Nested fragment caches
+            ul
+              li <a href="http://railscasts.com/episodes/387-cache-digests">rails casts</a>
+              li <a href="http://blog.xdite.net/posts/2012/09/02/cache-digest-new-strategy/">Cache Digests 最大化緩存策略</a>
+
+          li
+            h4 <a href="https://github.com/flyerhzm/simple_cacheable">simple_cacheable</a>
+            p cache find_by_attribute method, association method, custom methods
+            p <a href="http://rails-bestpractices.com/blog/posts/24-simple_cacheable">on rails-bestpractices</a>
+
+      section(data-bespoke-hash='benchmarking')
+        h2 Benchmarking Tools
+        h3.bullet
+        ul
+          li
+            h4 http_load
+            code.language
+              pre.
+                $ http_load -p 100 -s 30 url_list.txt
+          li
+            h4 siege
+            code.language
+              pre.
+                $ siege -c 100  -t 30s -f url_list.txt
+
+      section(data-bespoke-hash='tips')
+        h2 Tips
+        h3.bullet
+        div
+          div
+            h4 benchmark your codes, then choose a better solution
+            hr
+            code.language
+              pre.
+                Benchmark.measure { puts Businesspartner.unlocked_for_all(Campaign.all+Project.all).count }
+                # =>   0.010000   0.000000   0.010000 (  0.081793)
+                Benchmark.measure { puts Businesspartner.where("state_data = ''" ).count }
+                # =>   0.000000   0.010000   0.010000 (  0.046580)
+            hr
+          div
+            h4 use includes to kill n+1 queries
+            hr
+            p # Person belongs_to :user
+            p # User belongs_to :role
+            hr
+            code.language-css
+              pre.
+                Person.originated.includes(user: [:role])
+            hr
+
+      section(data-bespoke-hash='the-end', data-bespoke-state='emphatic')
+        h2 The End
+
+    script(src='bower_components/bespoke.js/dist/bespoke.min.js')
+    script(src='bower_components/bespoke-bullets/dist/bespoke-bullets.min.js')
+    script(src='bower_components/bespoke-hash/dist/bespoke-hash.min.js')
+    script(src='bower_components/bespoke-state/dist/bespoke-state.min.js')
+    script(src='bower_components/prism/prism.js')
+    script(src='scripts/main.js')
